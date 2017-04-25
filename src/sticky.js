@@ -31,7 +31,8 @@ export default class Sticky extends PureComponent {
     noExceptionOnMissedScrollElement: PropTypes.bool,
     wrapperCmp: PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
     holderCmp: PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
-    holderProps: PropTypes.object
+    holderProps: PropTypes.object,
+    onPositionChange: PropTypes.func
   }
 
   static defaultProps = {
@@ -90,7 +91,9 @@ export default class Sticky extends PureComponent {
       boundaryRect = boundaryElement ? getRect(boundaryElement) : {top: -Infinity, bottom: Infinity},
       scrollRect = getRect(scrollElement),
       isFixed = this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect);
-
+    
+    if(this.props.onPositionChange) this.props.onPositionChange(isFixed);
+    
     this.setState({
       fixed: isFixed,
       top: scrollRect.top,
