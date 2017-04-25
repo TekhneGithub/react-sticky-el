@@ -52,7 +52,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -68,9 +68,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.default = _sticky2.default;
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -172,9 +172,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -208,7 +208,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  // select by id
 	  if (selector[0] === '#') {
-	    return window.getElementById(selector.slice(1));
+	    return document.getElementById(selector.slice(1));
 	  }
 
 	  if (!matchesMethodName) {
@@ -226,9 +226,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return null;
 	}
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -262,7 +262,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var stickyOwnProps = ['mode', 'inlineStyle', 'stickyStyle', 'stickyClassName', 'boundaryElement', 'scrollElement', 'bottomOffset', 'topOffset', 'positionRecheckInterval', 'noExceptionOnMissedScrollElement', 'wrapperCmp', 'holderCmp', 'holderProps'];
+	var stickyOwnProps = ['mode', 'stickyStyle', 'stickyClassName', 'boundaryElement', 'scrollElement', 'bottomOffset', 'topOffset', 'positionRecheckInterval', 'noExceptionOnMissedScrollElement', 'wrapperCmp', 'holderCmp', 'holderProps'];
 
 	var Sticky = function (_PureComponent) {
 	  _inherits(Sticky, _PureComponent);
@@ -270,10 +270,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Sticky, [{
 	    key: 'isFixed',
 	    value: function isFixed(holderRect, wrapperRect, boundaryRect, scrollRect) {
-	      var _props = this.props;
-	      var bottomOffset = _props.bottomOffset;
-	      var topOffset = _props.topOffset;
-	      var mode = _props.mode;
+	      var _props = this.props,
+	          bottomOffset = _props.bottomOffset,
+	          topOffset = _props.topOffset,
+	          mode = _props.mode;
 
 
 	      if (boundaryRect && !instersect(boundaryRect, scrollRect, topOffset, bottomOffset)) {
@@ -287,14 +287,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return holderRect.bottom - topOffset > scrollRect.bottom && scrollRect.bottom - wrapperRect.height - bottomOffset > boundaryRect.top;
 	    }
 	  }, {
+	    key: 'holderEl',
+	    value: function holderEl() {
+	      return _reactDom2.default.findDOMNode(this.refs.holder);
+	    }
+	  }, {
+	    key: 'wrapperEl',
+	    value: function wrapperEl() {
+	      return _reactDom2.default.findDOMNode(this.refs.wrapper);
+	    }
+	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      var me = _reactDom2.default.findDOMNode(this);
-	      var _props2 = this.props;
-	      var boundaryElement = _props2.boundaryElement;
-	      var scrollElement = _props2.scrollElement;
-	      var noExceptionOnMissedScrollElement = _props2.noExceptionOnMissedScrollElement;
-	      var positionRecheckInterval = _props2.positionRecheckInterval;
+	      var _props2 = this.props,
+	          boundaryElement = _props2.boundaryElement,
+	          scrollElement = _props2.scrollElement,
+	          noExceptionOnMissedScrollElement = _props2.noExceptionOnMissedScrollElement,
+	          positionRecheckInterval = _props2.positionRecheckInterval;
 
 
 	      this.boundaryElement = (0, _find2.default)(boundaryElement, me);
@@ -323,7 +333,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      if (this.scrollElement) {
-	        (0, _events.unlisten)(this.scrollElement, this.checkPosition);
+	        (0, _events.unlisten)(this.scrollElement, ['scroll'], this.checkPosition);
 	      }
 	      (0, _events.unlisten)(window, ['scroll', 'resize', 'pageshow', 'load'], this.checkPosition);
 	      this.boundaryElement = null;
@@ -338,15 +348,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var _this = _possibleConstructorReturn(this, (Sticky.__proto__ || Object.getPrototypeOf(Sticky)).call(this, props));
 
 	    _this.checkPosition = function () {
-	      var boundaryElement = _this.boundaryElement;
-	      var scrollElement = _this.scrollElement;
+	      var boundaryElement = _this.boundaryElement,
+	          scrollElement = _this.scrollElement;
 
 
-	      var holderRect = _this.refs.holder.getBoundingClientRect(),
-	          wrapperRect = _this.refs.wrapper.getBoundingClientRect(),
+	      var holderRect = _this.holderEl().getBoundingClientRect(),
+	          wrapperRect = _this.wrapperEl().getBoundingClientRect(),
 	          boundaryRect = boundaryElement ? getRect(boundaryElement) : { top: -Infinity, bottom: Infinity },
 	          scrollRect = getRect(scrollElement),
 	          isFixed = _this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect);
+
+	      if (_this.props.onPositionChange) _this.props.onPositionChange(isFixed);
 
 	      _this.setState({
 	        fixed: isFixed,
@@ -386,16 +398,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'render',
 	    value: function render() {
 	      var props = this.props;
-	      var _state = this.state;
-	      var fixed = _state.fixed;
-	      var height = _state.height;
-	      var stickyClassName = props.stickyClassName;
-	      var stickyStyle = props.stickyStyle;
-	      var inlineStyle = props.inlineStyle;
-	      var holderCmp = props.holderCmp;
-	      var wrapperCmp = props.wrapperCmp;
-	      var holderProps = props.holderProps;
-	      var children = props.children;
+	      var _state = this.state,
+	          fixed = _state.fixed,
+	          height = _state.height;
+	      var stickyClassName = props.stickyClassName,
+	          stickyStyle = props.stickyStyle,
+	          holderCmp = props.holderCmp,
+	          wrapperCmp = props.wrapperCmp,
+	          holderProps = props.holderProps,
+	          children = props.children;
 
 	      var wrapperProps = sanitizeProps(props, stickyOwnProps);
 	      // To ensure that this component becomes sticky immediately on mobile devices instead
@@ -404,17 +415,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // @see http://stackoverflow.com/questions/32875046
 	      var wrapperStyle = { transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)' };
 	      if (wrapperProps.style) {
-	        wrapperStyle = _extends({ wrapperStyle: wrapperStyle }, wrapperProps.style);
+	        wrapperStyle = _extends({}, wrapperStyle, wrapperProps.style);
 	      }
 
 	      if (fixed) {
 	        wrapperProps.className += ' ' + stickyClassName;
-	        if (inlineStyle) {
-	          wrapperStyle = _extends({}, wrapperStyle, this.buildStickyStyle());
-	        }
-	        if (stickyStyle) {
-	          wrapperStyle = _extends({}, wrapperStyle, stickyStyle);
-	        }
+	        wrapperStyle = _extends({}, wrapperStyle, stickyStyle, this.buildStickyStyle());
 	      }
 
 	      holderProps.style = _extends({}, holderProps.style, { minHeight: height + 'px' });
@@ -434,7 +440,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	Sticky.propTypes = {
 	  mode: _react.PropTypes.oneOf(['top', 'bottom']),
-	  inlineStyle: _react.PropTypes.bool,
 	  stickyStyle: _react.PropTypes.object,
 	  stickyClassName: _react.PropTypes.string,
 	  boundaryElement: _react.PropTypes.string,
@@ -445,7 +450,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  noExceptionOnMissedScrollElement: _react.PropTypes.bool,
 	  wrapperCmp: _react.PropTypes.oneOfType([_react2.default.PropTypes.string, _react2.default.PropTypes.func]),
 	  holderCmp: _react.PropTypes.oneOfType([_react2.default.PropTypes.string, _react2.default.PropTypes.func]),
-	  holderProps: _react.PropTypes.object
+	  holderProps: _react.PropTypes.object,
+	  onPositionChange: _react.PropTypes.func
 	};
 	Sticky.defaultProps = {
 	  className: '',
@@ -456,7 +462,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  wrapperCmp: 'div',
 	  stickyClassName: 'sticky',
 	  stickyStyle: null,
-	  inlineStyle: true,
 	  boundaryElement: null,
 	  scrollElement: 'window',
 	  topOffset: 0,
@@ -498,19 +503,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return props;
 	}
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_5__;
 
-/***/ }
+/***/ })
 /******/ ])
 });
 ;
